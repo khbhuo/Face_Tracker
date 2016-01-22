@@ -2,10 +2,10 @@
 
 import cv2
 import sys
-import serial
+#import serial
 
-ser = serial.Serial('COM16', 57600)
-ser.timeout = None
+#ser = serial.Serial('COM16', 57600)
+#ser.timeout = None
 
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
@@ -13,6 +13,10 @@ faceCascade = cv2.CascadeClassifier(cascPath)
 video_capture = cv2.VideoCapture(0)
 center_width = video_capture.get(3)/2
 center_height = video_capture.get(4)/2
+
+x_dist_from_center = 0
+y_dist_from_center = 0
+
 
 while True:
     # Capture frame-by-frame
@@ -41,8 +45,8 @@ while True:
 
     # Serial print the distance
     print "[", x_dist_from_center, ", ", y_dist_from_center, "]"
-    msg = 'x' + x_dist_from_center + ',' + y_dist_from_center + '\n'
-    ser.write(msg)
+    msg = 'x' + str(x_dist_from_center) + ',' + str(y_dist_from_center) + '\n'
+    #ser.write(msg)
     
     # Display the resulting frame
     cv2.imshow('Video', frame)
@@ -53,4 +57,4 @@ while True:
 # When everything is done, release the capture
 video_capture.release()
 cv2.destroyAllWindows()
-ser.close()
+#ser.close()
