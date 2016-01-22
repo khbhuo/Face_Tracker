@@ -2,10 +2,10 @@
 
 import cv2
 import sys
-#import serial
+import serial
 
-#ser = serial.Serial('COM16', 57600)
-#ser.timeout = None
+ser = serial.Serial('/dev/ttyACM0', 9600)
+ser.timeout = None
 
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
@@ -44,15 +44,19 @@ while True:
         y_dist_from_center = y+(w/2) - center_height
 
     # Serial print the distance
-    print "[", x_dist_from_center, ", ", y_dist_from_center, "]"
+    #print "[", x_dist_from_center, ", ", y_dist_from_center, "]"
     msg = 'x' + str(x_dist_from_center) + ',' + str(y_dist_from_center) + '\n'
-    #ser.write(msg)
-    
+    print msg
+    ser.write(msg)
+   
     # Display the resulting frame
     cv2.imshow('Video', frame)
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    if ser.inWaiting() >= 4:
+    	print "from Arduino" +  ser.readline()
+	ser.flushInput()   
 
 # When everything is done, release the capture
 video_capture.release()
