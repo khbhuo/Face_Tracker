@@ -2,31 +2,27 @@
 #include <Servo.h> 
 
 #define BAUD_RATE 9600
-#define TILT_HOME 139
-#define PAN_HOME 75
-
+#define TILT_HOME 1772
+#define PAN_HOME 1337
+#define DEBUG
 Servo tiltMotor,panMotor;  // create servo object to control a servo 
 
-int x = 0,y= 0;
+double x = 0.0,y= 0.0,set_x = 0.0, set_y =0.0, goal_x= 0.0,goal_y= 0.0;
 
-//Define Variables we'll be connecting to
-double Setpoint, Input, Output;
+//initial tuning parameters
+float Kp=2, Ki=5, Kd=1;
 
-//Specify the links and initial tuning parameters
-double Kp=2, Ki=5, Kd=1;
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+PID PID_xAxis(&x, &set_x, &goal_x, Kp, Ki, Kd, DIRECT);
 
 void setup() 
 { 
   Serial.begin(BAUD_RATE);
-  Input =
-  Setpoint = 100;
-  myPID.SetMode(AUTOMATIC); //turn the PID on
+  PID_xAxis.SetMode(AUTOMATIC); //turn the PID on
   tiltMotor.attach(5); 
   panMotor.attach(6);
-  tiltMotor.write(TILT_HOME);
-  panMotor.write(PAN_HOME);
-  delay(1000);
+  tiltMotor.writeMicroseconds(TILT_HOME);
+  panMotor.writeMicroseconds(PAN_HOME);
+  delay(10000);
 }
 
 void loop() 
@@ -43,7 +39,7 @@ void loop()
         if (recieved != char(-1))
           inData += recieved;
       }while (recieved != ',');
-      x = inData.toInt();
+      x = (float)inData.toInt();
       inData = "";
 
       do{
@@ -51,23 +47,41 @@ void loop()
         if (recieved != char(-1))
           inData += recieved;
       }while ( recieved != '\n');
-      y = inData.toInt();
+      y = (float)inData.toInt();
+    }
+    else if(Serial.read() == 'c')
+    {
+      do{
+        recieved = (char) Serial.read();
+        if (recieved != char(-1))
+          inData += recieved;
+      }while (recieved != ',');
+      goal_x = (float)inData.toInt();
+      inData = "";
+
+      do{
+        recieved = (char) Serial.read();
+        if (recieved != char(-1))
+          inData += recieved;
+      }while ( recieved != '\n');
+      goal_y = (float)inData.toInt();
     }
 
   }
   
-  Input = analogRead(PIN_INPUT);
-  myPID.Compute();
-  analogWrite(PIN_OUTPUT, Output);
+  PID_xAxis.Compute();
+  int temp = constrain(panMotor.read()+ round((int)set_x), 1000, 2000);
+  panMotor.write(panMotor.read()+ set_x);
 
   #ifdef DEBUG
   if (x > 0)
   {
-    Serial.print(x);
+    Serial.print(panMotor.read());
     Serial.print(",");
-    Serial.println(y);
+    Serial.println(panMotor.read());
   }
   #endif
+  
   delay(15);
   
   /*

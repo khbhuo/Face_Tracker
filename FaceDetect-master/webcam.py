@@ -10,15 +10,17 @@ ser.timeout = None
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
 
-video_capture = cv2.VideoCapture(0)
+# Get centre of the image
+video_capture = cv2.VideoCapture(1)
 center_width = video_capture.get(3)/2
 center_height = video_capture.get(4)/2
 
-x_dist_from_center = 0
-y_dist_from_center = 0
-
+msg = 'c' + str(center_width) + ',' + str(center_height) + '\n'
+ser.write(msg)
 
 while True:
+    face_on_xAxis = center_width
+    face_on_yAxis = center_height
     # Capture frame-by-frame
     ret, frame = video_capture.read()    
 
@@ -39,13 +41,9 @@ while True:
     for (x, y, w, h) in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-        # Get the distance from center of frame
-        x_dist_from_center = x+(h/2) - center_width
-        y_dist_from_center = y+(w/2) - center_height
-
     # Serial print the distance
     #print "[", x_dist_from_center, ", ", y_dist_from_center, "]"
-    msg = 'x' + str(x_dist_from_center) + ',' + str(y_dist_from_center) + '\n'
+    msg = 'x' + str(face_on_xAxis) + ',' + str(face_on_yAxis) + '\n'
     print msg
     ser.write(msg)
    
