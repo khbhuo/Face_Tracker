@@ -9,9 +9,19 @@ Servo tiltMotor,panMotor;  // create servo object to control a servo
 
 int x = 0,y= 0;
 
+//Define Variables we'll be connecting to
+double Setpoint, Input, Output;
+
+//Specify the links and initial tuning parameters
+double Kp=2, Ki=5, Kd=1;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+
 void setup() 
 { 
   Serial.begin(BAUD_RATE);
+  Input =
+  Setpoint = 100;
+  myPID.SetMode(AUTOMATIC); //turn the PID on
   tiltMotor.attach(5); 
   panMotor.attach(6);
   tiltMotor.write(TILT_HOME);
@@ -45,6 +55,10 @@ void loop()
     }
 
   }
+  
+  Input = analogRead(PIN_INPUT);
+  myPID.Compute();
+  analogWrite(PIN_OUTPUT, Output);
 
   #ifdef DEBUG
   if (x > 0)
