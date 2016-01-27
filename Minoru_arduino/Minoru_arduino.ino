@@ -13,21 +13,76 @@ double x = 0.0,y= 0.0,set_x = 0.0, set_y =0.0, goal_x= 0.0,goal_y= 0.0;
 float Kp=322, Ki=5, Kd=1;
 
 PID PID_xAxis(&x, &set_x, &goal_x, Kp, Ki, Kd, DIRECT);
+String inputString = "";
 
 void setup() 
 { 
   Serial.begin(BAUD_RATE);
+  inputString.reserve(20);
   PID_xAxis.SetMode(AUTOMATIC); //turn the PID on
   tiltMotor.attach(5,10,100); 
   panMotor.attach(6);
   tiltMotor.writeMicroseconds(TILT_HOME);
   panMotor.writeMicroseconds(PAN_HOME);
-  delay(10000);
+  //delay(10000);
 }
 
 void loop() 
 {
-  Serial.write("he");
+//  Serial.write("he");
+  
+  /*
+  PID_xAxis.Compute();
+  int temp = constrain(panMotor.read()+ round((int)set_x), 1000, 2000);
+  panMotor.write(panMotor.read()+ set_x);
+
+  #ifdef DEBUG
+  if (x > 0)
+  {
+    Serial.print(panMotor.read());
+    Serial.print(",");
+    Serial.println(panMotor.read());
+  }
+  #endif
+  */
+  Serial.print(x);
+  Serial.print(",");
+  Serial.println(y);
+  delay(15);
+  
+  /*
+  for(pos = 0; pos <= 180; pos += 1) // goes from 0 degrees to 180 degrees 
+  {                                  // in steps of 1 degree 
+    tiltMotor.write(pos);              // tell servo to go to position in variable 'pos' 
+    panMotor.write(pos);
+    delay(15);                       // waits 15ms for the servo to reach the position 
+  } 
+  for(pos = 180; pos>=0; pos-=1)     // goes from 180 degrees to 0 degrees 
+  {                                
+    tiltMotor.write(pos);              // tell servo to go to position in variable 'pos' 
+    panMotor.write(pos);
+    delay(15);                       // waits 15ms for the servo to reach the position 
+  } 
+  */
+  
+} 
+
+void serialEvent()
+{
+  inputString = Serial.readStringUntil(',');
+  if (inputString.startsWith("x"))
+  {
+    x = inputString.substring(1).toFloat();
+    inputString = Serial.readStringUntil('\n');
+    y = inputString.toFloat();
+  }
+  else if (inputString.startsWith("c"))
+  {
+    x = float(inputString.substring(1).toInt());
+    inputString = Serial.readStringUntil('\n');
+    y = float(inputString.toInt());
+  }
+  /*
   while(!Serial.available());  
   {
     String inData = "";
@@ -68,37 +123,5 @@ void loop()
       goal_y = (float)inData.toInt();
     }
 
-  }
-  
-  PID_xAxis.Compute();
-  int temp = constrain(panMotor.read()+ round((int)set_x), 1000, 2000);
-  panMotor.write(panMotor.read()+ set_x);
-
-  #ifdef DEBUG
-  if (x > 0)
-  {
-    Serial.print(panMotor.read());
-    Serial.print(",");
-    Serial.println(panMotor.read());
-  }
-  #endif
-  
-  delay(15);
-  
-  /*
-  for(pos = 0; pos <= 180; pos += 1) // goes from 0 degrees to 180 degrees 
-  {                                  // in steps of 1 degree 
-    tiltMotor.write(pos);              // tell servo to go to position in variable 'pos' 
-    panMotor.write(pos);
-    delay(15);                       // waits 15ms for the servo to reach the position 
-  } 
-  for(pos = 180; pos>=0; pos-=1)     // goes from 180 degrees to 0 degrees 
-  {                                
-    tiltMotor.write(pos);              // tell servo to go to position in variable 'pos' 
-    panMotor.write(pos);
-    delay(15);                       // waits 15ms for the servo to reach the position 
-  } 
-  */
-  
-} 
-
+  }*/
+}
