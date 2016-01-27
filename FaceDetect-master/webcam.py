@@ -5,6 +5,9 @@ import sys
 import serial
 import time
 
+# Import the serial_checker.py
+import serial_checker
+
 ser = serial.Serial('/dev/ttyACM0', 9600)
 ser.timeout = None
 
@@ -18,6 +21,8 @@ center_height = video_capture.get(4)/2
 
 msg = 'c' + str(center_width) + ',' + str(center_height) + '\n'
 ser.write(msg)
+
+
 
 while True:
     face_on_xAxis = center_width
