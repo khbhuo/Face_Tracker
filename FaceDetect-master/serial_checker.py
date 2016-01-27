@@ -9,20 +9,19 @@ import random
 exitFlag = True
 
 class checkthread(threading.Thread):
-	def __init__(self, threadID, name):
+	def __init__(self, threadID, name, ser):
 		threading.Thread.__init__(self)
 		self.threadID = threadID
 		self.name = name
+		self.ser = ser
 	def run(self):
 		print "Starting " + self.name
-		print_msg(self.name)
+		print_msg(self.name, self.ser)
 		print "Exiting " + self.name
-		
 
-def print_msg(threadName):
+def print_msg(threadName, ser):
 	while exitFlag:
-		
-		msg_from_serial = ser1.readline()
+		msg_from_serial = ser.readline()
 		print "%s: %s" % (threadName, msg_from_serial)
 
 def exitThread():
