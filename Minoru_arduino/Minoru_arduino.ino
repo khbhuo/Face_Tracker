@@ -10,7 +10,7 @@ Servo tiltMotor,panMotor;  // create servo object to control a servo
 double x = 0.0,y= 0.0,set_x = 0.0, set_y =0.0, goal_x= 0.0,goal_y= 0.0;
 
 //initial tuning parameters
-float Kp=2, Ki=5, Kd=1;
+float Kp=322, Ki=5, Kd=1;
 
 PID PID_xAxis(&x, &set_x, &goal_x, Kp, Ki, Kd, DIRECT);
 
@@ -18,7 +18,7 @@ void setup()
 { 
   Serial.begin(BAUD_RATE);
   PID_xAxis.SetMode(AUTOMATIC); //turn the PID on
-  tiltMotor.attach(5); 
+  tiltMotor.attach(5,10,100); 
   panMotor.attach(6);
   tiltMotor.writeMicroseconds(TILT_HOME);
   panMotor.writeMicroseconds(PAN_HOME);
@@ -27,7 +27,8 @@ void setup()
 
 void loop() 
 {
-  while (Serial.available())
+  Serial.write("he");
+  while(!Serial.available());  
   {
     String inData = "";
     char recieved = ' '; 

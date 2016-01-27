@@ -3,6 +3,7 @@
 import cv2
 import sys
 import serial
+import time
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 ser.timeout = None
