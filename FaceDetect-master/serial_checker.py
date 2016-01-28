@@ -20,9 +20,12 @@ class checkthread(threading.Thread):
 		print "Exiting " + self.name
 
 def print_msg(threadName, ser):
-	while exitFlag:
-		msg_from_serial = ser.readline()
-		print "%s: %s" % (threadName, msg_from_serial)
+    while exitFlag:
+        print "I'm alive"
+        if ser.inWaiting():
+            print "I'm in inWaiting"
+            msg_from_serial = ser.readline()
+            print "%s: %s" % (threadName, msg_from_serial)
 
 def exitThread():
 	exitFlag = False
@@ -31,7 +34,7 @@ def exitThread():
 ser1 = serial.Serial('/dev/ttyACM0', 9600)
 
 # Create new threads
-thread1 = checkthread(1, "Checker Thread")
+thread1 = checkthread(1, "Checker Thread", ser1)
 
 # Start new Threads
 thread1.start()
@@ -39,9 +42,11 @@ thread1.start()
 # Send random stuff
 n = 0
 while n < 20:
-	msg = 'x' + str(random.random()) + ',' + str(random.random()) + '\n'
+	msg = 'x' + "%.3f" % random.random() + ',' + "%.3f" % random.random() + '\n'
 	ser1.write(msg)
-	print "from arduino: " + msg
-	time.sleep(0.02)
+	print "to arduino: " + msg
+	#time.sleep(0.02)
 	n += 1
-exitFlag = 
+exitFlag = 0
+
+ser1.close()
