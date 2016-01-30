@@ -18,7 +18,7 @@ String inputString = "";
 void setup() 
 { 
   Serial.begin(BAUD_RATE);
-  inputString.reserve(20);
+  //inputString.reserve(20);
   PID_xAxis.SetMode(AUTOMATIC); //turn the PID on
   tiltMotor.attach(5); 
   panMotor.attach(6);
@@ -70,6 +70,7 @@ void loop()
 void serialEvent()
 {
   inputString = Serial.readStringUntil(',');
+  Serial.println(inputString);
   if (inputString.startsWith("x") || inputString.startsWith("c"))
   {
     x = float(inputString.substring(1).toInt());

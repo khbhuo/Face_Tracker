@@ -21,7 +21,6 @@ class checkthread(threading.Thread):
 
 def print_msg(threadName, ser):
     while exitFlag:
-        print "I'm alive"
         if ser.inWaiting():
             print "I'm in inWaiting"
             msg_from_serial = ser.readline()
@@ -41,11 +40,11 @@ thread1.start()
 
 # Send random stuff
 n = 0
-while n < 20:
+while n < 10:
 	msg = 'x' + "%.3f" % random.random() + ',' + "%.3f" % random.random() + '\n'
 	ser1.write(msg)
 	print "to arduino: " + msg
-	#time.sleep(0.02)
+	time.sleep(0.02)
 	n += 1
 exitFlag = 0
 
