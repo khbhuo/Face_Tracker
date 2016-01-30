@@ -20,7 +20,7 @@ void setup()
   Serial.begin(BAUD_RATE);
   inputString.reserve(20);
   PID_xAxis.SetMode(AUTOMATIC); //turn the PID on
-  tiltMotor.attach(5,10,100); 
+  tiltMotor.attach(5); 
   panMotor.attach(6);
   tiltMotor.writeMicroseconds(TILT_HOME);
   panMotor.writeMicroseconds(PAN_HOME);
@@ -70,19 +70,20 @@ void loop()
 void serialEvent()
 {
   inputString = Serial.readStringUntil(',');
-  if (inputString.startsWith("x"))
-  {
-    x = inputString.substring(1).toFloat();
-    inputString = Serial.readStringUntil('\n');
-    y = inputString.toFloat();
-  }
-  else if (inputString.startsWith("c"))
+  if (inputString.startsWith("x") || inputString.startsWith("c"))
   {
     x = float(inputString.substring(1).toInt());
     inputString = Serial.readStringUntil('\n');
     y = float(inputString.toInt());
   }
   /*
+  else if (inputString.startsWith("c"))
+  {
+    x = float(inputString.substring(1).toInt());
+    inputString = Serial.readStringUntil('\n');
+    y = float(inputString.toInt());
+  }
+
   while(!Serial.available());  
   {
     String inData = "";
