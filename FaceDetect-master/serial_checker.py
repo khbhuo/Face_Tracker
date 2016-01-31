@@ -44,7 +44,7 @@ while n < 10:
 	msg = 'x' + "%.3f" % random.random() + ',' + "%.3f" % random.random() + '\n'
 	ser1.write(msg)
 	print "to arduino: " + msg
-	time.sleep(0.02)
+	time.sleep(1)
 	n += 1
 exitFlag = 0
 
