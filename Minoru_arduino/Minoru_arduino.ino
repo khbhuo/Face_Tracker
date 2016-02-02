@@ -7,7 +7,7 @@
 #define DEBUG
 Servo tiltMotor,panMotor;  // create servo object to control a servo 
 
-double x = 0.0,y= 0.0,set_x = 0.0, set_y =0.0, goal_x= 0.0,goal_y= 0.0;
+double x = 1.0,y= 3.0,set_x = 0.0, set_y =0.0, goal_x= 0.0,goal_y= 0.0;
 
 //initial tuning parameters
 float Kp=322, Ki=5, Kd=1;
@@ -45,7 +45,7 @@ void loop()
   }
   #endif
   */
-  if(Serial.available() >= 20)
+
   {
     Serial.print(x);
     Serial.print(",");
@@ -71,18 +71,17 @@ void loop()
 void serialEvent()
 {
   inputString = Serial.readStringUntil(',');
-  Serial.println(inputString);
   if (inputString.startsWith("x"))
   {
-    x = float(inputString.substring(1).toInt());
+    x = (inputString.substring(1)).toFloat();
     inputString = Serial.readStringUntil('\n');
-    y = float(inputString.toInt());
+    y = inputString.toFloat();
   }
   else if (inputString.startsWith("c"))
   {
-    x = float(inputString.substring(1).toInt());
+    x = inputString.substring(1).toFloat();
     inputString = Serial.readStringUntil('\n');
-    y = float(inputString.toInt());
+    y = inputString.toFloat();
   }
 /*
   while(!Serial.available());  
