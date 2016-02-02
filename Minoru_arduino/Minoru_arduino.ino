@@ -72,20 +72,19 @@ void serialEvent()
 {
   inputString = Serial.readStringUntil(',');
   Serial.println(inputString);
-  if (inputString.startsWith("x") || inputString.startsWith("c"))
+  if (inputString.startsWith("x"))
   {
     x = float(inputString.substring(1).toInt());
     inputString = Serial.readStringUntil('\n');
     y = float(inputString.toInt());
   }
-  /*
   else if (inputString.startsWith("c"))
   {
     x = float(inputString.substring(1).toInt());
     inputString = Serial.readStringUntil('\n');
     y = float(inputString.toInt());
   }
-
+/*
   while(!Serial.available());  
   {
     String inData = "";
