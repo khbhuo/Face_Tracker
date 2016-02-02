@@ -65,7 +65,7 @@ void loop()
     delay(15);                       // waits 15ms for the servo to reach the position 
   } 
   */
-  
+  delay(10);
 } 
 
 void serialEvent()
