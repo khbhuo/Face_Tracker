@@ -1,10 +1,12 @@
 #!/usr/bin/python
 
+import signal
 import cv2
 import sys
 import serial
 import time
-import serial_checker.py
+import threading
+import serial_checker
 
 def signal_handler(signal, frame):
     print "You pressed Ctrl+C"
@@ -14,9 +16,11 @@ def signal_handler(signal, frame):
 
 
 # Main function
-global thread1 = serial_checker.checkthread(1, "Checker Thread", ser1)
-
 ser = serial.Serial('/dev/ttyACM0', 57600)
+global thread1
+thread1 = serial_checker.checkthread(1, "Checker Thread", ser)
+
+
 ser.timeout = None
 
 cascPath = sys.argv[1]

@@ -11,7 +11,7 @@ Servo TiltMotor, PanMotor; // create servo object to control a servo
 double x = 1.0, y = 3.0, set_x = 0.0, set_y = 0.0, goal_x = 0.0, goal_y = 0.0;
 
 //initial tuning parameters
-float Kp = 322, Ki = 5, Kd = 1;
+float Kp = 322, Ki = 0, Kd = 0;
 
 PID PID_xAxis(&x, &set_x, &goal_x, Kp, Ki, Kd, DIRECT);
 long startTime = 0;
@@ -40,7 +40,7 @@ void loop()
     PID_xAxis.Compute();
     int temp = constrain(PanMotor.read()+ round((int)set_x), 1000, 2000);
     PanMotor.write(PanMotor.read()+ set_x);
-
+    Serial.println(PanMotor.read()+ set_x);
 }
 
 void serialEvent()
