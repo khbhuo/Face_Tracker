@@ -56,5 +56,13 @@ thread1 = checkthread(1, "Checker Thread", ser1)
 thread1.start()
 
 signal.signal(signal.SIGINT, signal_handler)
+# Send random stuff
+n = 0
+while n < 100:
+	  msg = 'x' + "%.3f" % random.random() + ',' + "%.3f" % random.random() + '\n'
+	  ser1.write(msg)
+	  print "to arduino: " + msg
+	  time.sleep(0.1)
+	  n += 1
 
 ser1.close()
