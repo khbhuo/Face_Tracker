@@ -4,6 +4,17 @@ import cv2
 import sys
 import serial
 import time
+import serial_checker.py
+
+def signal_handler(signal, frame):
+    print "You pressed Ctrl+C"
+    thread1.exitThread()
+    thread1.join()
+    sys.exit(0)
+
+
+# Main function
+global thread1 = serial_checker.checkthread(1, "Checker Thread", ser1)
 
 ser = serial.Serial('/dev/ttyACM0', 57600)
 ser.timeout = None
@@ -12,12 +23,17 @@ cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
 
 # Get centre of the image
-video_capture = cv2.VideoCapture(0)
+video_capture = cv2.VideoCapture(1)
 center_width = video_capture.get(3)/2
 center_height = video_capture.get(4)/2
 
 msg = 'c' + str(center_width) + ',' + str(center_height) + '\n'
 ser.write(msg)
+
+# Thread begin
+thread1.start()
+
+signal.signal(signal.SIGINT, signal_handler)
 
 while True:
     face_on_xAxis = center_width
