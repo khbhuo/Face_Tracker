@@ -46,14 +46,14 @@ def print_msg(threadName, ser):
 
 
 # Create the serial object
-ser1 = serial.Serial('/dev/ttyACM2', 9600)
+ser1 = serial.Serial('/dev/ttyACM0', 57600)
 
 global thread1
 # Create new threads
 thread1 = checkthread(1, "Checker Thread", ser1)
 
 # Start new Threads
-thread1.start()
+#thread1.start()
 
 signal.signal(signal.SIGINT, signal_handler)
 # Send random stuff
@@ -62,7 +62,7 @@ while n < 100:
 	  msg = 'x' + "%.3f" % random.random() + ',' + "%.3f" % random.random() + '\n'
 	  ser1.write(msg)
 	  print "to arduino: " + msg
-	  time.sleep(0.2)
+	  time.sleep(0.1)
 	  n += 1
 #exitFlag = False
 #thread1.exit()
