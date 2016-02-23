@@ -19,7 +19,7 @@ class checkthread(threading.Thread):
         print "Starting " + self.name
         while self.exitFlag:
             time.sleep(.1)
-            print self.exitFlag
+            #print self.exitFlag
             print_msg(self.name, self.ser)
         print "Exiting " + self.name
     

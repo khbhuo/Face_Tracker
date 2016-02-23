@@ -16,7 +16,7 @@ def signal_handler(signal, frame):
 
 
 # Main function
-ser = serial.Serial('/dev/ttyACM0', 57600)
+ser = serial.Serial('/dev/ttyACM4', 57600)
 global thread1
 thread1 = serial_checker.checkthread(1, "Checker Thread", ser)
 
@@ -42,6 +42,10 @@ signal.signal(signal.SIGINT, signal_handler)
 while True:
     face_on_xAxis = center_width
     face_on_yAxis = center_height
+    
+    #TODO remove only send once
+    msg = 'c' + str(center_width) + ',' + str(center_height) + '\n'
+    ser.write(msg)
 
     # Capture frame-by-frame
     ret, frame = video_capture.read()    
@@ -64,8 +68,9 @@ while True:
 
     # Serial print the distance
     #print "[", x_dist_from_center, ", ", y_dist_from_center, "]"
-    msg = 'x' + str(face_on_xAxis) + ',' + str(face_on_yAxis) + '\n'
+    msg = 'x' + str(face_on_xAxis) + ',' + str(face_on_yAxis)
     print "to arduino: " + msg
+    msg += "\n"
     ser.write(msg)
    
     # Display the resulting frame
